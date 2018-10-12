@@ -12,19 +12,54 @@
 <body>
     <h1 class="title"> Random User Generator</h1>
     <div class="user-profile">
-        <img id="avatar" src="https://pbs.twimg.com/profile_images/743138182607175680/ZJzktgBk_400x400.jpg" />
-        <div id="fullname">Jon Snow</div>
+        <img id="avatar" src="" />
+        <div id="fullname"></div>
         <div id="username">
-            kingofnorth
+
         </div>
         <div class="description">
-            <div>Email: <span id="email">jon@hotmail.com</span></div>
-            <div>City: <span id="city">Winterfell</span></div>
+            <div>Email: <span id="email"></span></div>
+            <div>City: <span id="city"></span></div>
         </div>
         <div class="footer">
             <button id="btn">Next User!</button>
         </div>
     </div>
+
+    <script>
+        // API url
+        let url = 'https://randomuser.me/api/';
+
+        let btn = document.getElementById("btn");
+
+        btn.addEventListener('click', random = () => {
+            // When the button is clicked generate a random user
+
+            let fullname = document.getElementById("fullname")
+            let username = document.getElementById("username")
+            let email = document.getElementById("email")
+            let city = document.getElementById("city")
+            let img = document.getElementById("avatar")
+
+            fetch(url)
+                //check if fetch was successful and make data json
+                .then(data => !data.ok ? console.log(data.code) : data.json())
+                .then(data => {
+                    //Update details
+                    fullname.textContent = data.results[0].name.first;
+                    fullname.append(' ' + data.results[0].name.last)
+                    username.textContent = '@' + data.results[0].login.username;
+                    email.textContent = data.results[0].email;
+                    city.textContent = (data.results[0].location.city + ', ' + data.results[0].location.state)
+                    img.src = data.results[0].picture.medium;
+                })
+                // If fetch fails
+                .catch(error => (console.log(error)))
+        });
+
+        //Init web app
+        random();
+    </script>
 </body>
 
 </html>
